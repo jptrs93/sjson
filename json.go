@@ -1,6 +1,7 @@
 package sjson
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -175,4 +176,14 @@ func (j *Json) Bytes() []byte {
 
 func (j *Json) String() string {
 	return string(j.Bytes())
+}
+
+func DecodeAt[T any](j *Json, keyPath ...string) (T, error) {
+	var res T
+	if val, err := j.Get(keyPath...); err != nil {
+		return res, err
+	} else {
+		err = json.Unmarshal(val.Bytes(), &res)
+		return res, err
+	}
 }
